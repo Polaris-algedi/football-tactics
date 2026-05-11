@@ -1,8 +1,16 @@
-import React from "react";
+"use client";
+import React, { useEffect, useRef, useState } from "react";
+import { useTacticsStore } from "@/store/tactics";
+import PlayerMarker from "@/components/player-marker";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export default function PitchBase() {
+  const squad = useTacticsStore((state) => state.squad);
+  const pitchRef = useRef<HTMLDivElement>(null);
+
   return (
     <section
+      ref={pitchRef}
       aria-label="Interactive Tactical Pitch"
       className="relative w-full max-w-2xl mx-auto aspect-2/3 overflow-hidden shadow-2xl rounded-sm"
     >
@@ -52,14 +60,22 @@ export default function PitchBase() {
       </svg>
 
       {/* Interactive Player Layer */}
-      <div
-        className="absolute inset-0 z-10"
-        aria-live="polite"
-        role="region"
-        aria-label="Player Positions"
-      >
-        {/* Framer Motion / dnd-kit / custom draggable players mount here */}
-      </div>
+      <TooltipProvider delayDuration={200}>
+        <div
+          className="absolute inset-0 z-10"
+          aria-live="polite"
+          role="region"
+          aria-label="Player Positions"
+        >
+          {squad.map((player) => (
+            <PlayerMarker
+              key={player.id}
+              player={player}
+              constraintsRef={pitchRef}
+            />
+          ))}
+        </div>
+      </TooltipProvider>
     </section>
   );
 }
