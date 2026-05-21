@@ -28,20 +28,24 @@ export interface PitchPlayer extends Player {
   y: number; // Percentage 0-100 (Top to Bottom)
 }
 
+export type PositionCoordinate = { x: number; y: number };
+
 export interface FormationPreset {
-  name: string; // e.g., "4-3-3", "4-2-3-1", "5-4-1"
-  positions: { id: string; role: Position; x: number; y: number }[];
+  name: string;
+  positions: PositionCoordinate[];
 }
 
 interface TacticsState {
   activeFormation: string;
   squad: PitchPlayer[]; // The 11 players on the pitch
   bench: Player[]; // Available substitutes
+  selectedBenchPlayerId: string | null;
 
   // Actions
   movePlayer: (id: string, x: number, y: number) => void;
   swapPlayer: (pitchPlayerId: string, benchPlayerId: string) => void;
   changeFormation: (formationName: string, preset: FormationPreset) => void;
+  setSelectedBenchPlayer: (id: string | null) => void;
 }
 
 // Initial Mock Data (We will expand this later)
@@ -156,6 +160,7 @@ export const useTacticsStore = create<TacticsState>((set) => ({
   activeFormation: "4-3-3",
   squad: initialSquad,
   bench: initialBench,
+  selectedBenchPlayerId: null,
 
   // Action: Update a player's exact X/Y coordinates (fired when dragging ends)
   movePlayer: (id, x, y) =>
@@ -209,4 +214,6 @@ export const useTacticsStore = create<TacticsState>((set) => ({
 
       return { activeFormation: formationName, squad: newSquad };
     }),
+
+  setSelectedBenchPlayer: (id) => set({ selectedBenchPlayerId: id }),
 }));

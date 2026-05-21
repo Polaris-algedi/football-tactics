@@ -20,9 +20,18 @@ export default function PlayerMarker({
   constraintsRef,
 }: PlayerMarkerProps) {
   const movePlayer = useTacticsStore((state) => state.movePlayer);
-
+  // 🔥 THE FIX: We bring in activeFormation to use as a cache-buster
+  const activeFormation = useTacticsStore((state) => state.activeFormation);
   // State to keep track of the pitch container's dynamic dimensions
   const [pitchSize, setPitchSize] = useState({ width: 0, height: 0 });
+  const selectedBenchPlayerId = useTacticsStore(
+    (state) => state.selectedBenchPlayerId,
+  );
+  const swapPlayer = useTacticsStore((state) => state.swapPlayer);
+  const setSelectedBenchPlayer = useTacticsStore(
+    (state) => state.setSelectedBenchPlayer,
+  );
+
   const MARKER_RADIUS = 20;
 
   const constraints = {
@@ -91,6 +100,13 @@ export default function PlayerMarker({
     );
   };
 
+  const handleMarkerClick = () => {
+    if (selectedBenchPlayerId) {
+      swapPlayer(player.id, selectedBenchPlayerId);
+      setSelectedBenchPlayer(null); // Clear selection after swap
+    }
+  };
+
   // Prevent rendering until we have the pitch dimensions to avoid a 0,0 visual flash
   if (pitchSize.width === 0) return null;
 
@@ -98,7 +114,9 @@ export default function PlayerMarker({
     <Tooltip>
       <TooltipTrigger asChild>
         <motion.div
-          key={`${player.id}-${Math.round(pitchSize.width)}-${Math.round(pitchSize.height)}`} // ← Reset drag state on resize
+          // 🔥 THE FIX: Including activeFormation in the key forces Framer Motion
+          // to reset its internal layout cache when the formation changes!
+          key={`${player.id}-${activeFormation}-${Math.round(pitchSize.width)}`} // ← Reset drag state on resize
           drag
           dragMomentum={false}
           dragConstraints={constraints}
@@ -111,11 +129,22 @@ export default function PlayerMarker({
             scale: 1.15,
             boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
             transition: { duration: 0.1 },
+            zIndex: 50, // Ensures the dragged player stays above others
           }}
           // Added -ml-5 and -mt-5 to perfectly center the 40px (h-10 w-10) marker on the coordinate
           className="absolute top-0 left-0 -ml-5 -mt-5 cursor-grab active:cursor-grabbing rounded-full"
         >
-          <div className="z-20 flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-[#C1272D] shadow-xl active:z-50">
+          {/* <div className="z-20 flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-[#C1272D] shadow-xl active:z-50">
+            <span className="text-sm font-bold text-white select-none">
+              {player.number}
+            </span>
+          </div> */}
+          <div
+            onClick={handleMarkerClick}
+            className={`flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-[#C1272D] shadow-xl transition-all
+    ${selectedBenchPlayerId ? "animate-pulse cursor-pointer ring-4 ring-[#006233]/50" : ""}
+  `}
+          >
             <span className="text-sm font-bold text-white select-none">
               {player.number}
             </span>
