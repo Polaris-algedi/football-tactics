@@ -1,6 +1,7 @@
 import PitchBase from "@/components/pitch-base";
 import FormationSwitcher from "@/components/formation-switcher";
 import SquadSidebar from "@/components/squad-sidebar";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -10,6 +11,14 @@ export default function Home() {
           Atlas Lions Tactics
         </h1>
         <p className="text-slate-400 mt-2">Interactive Match Predictor</p>
+        <div className="flex gap-4 justify-center mt-4">
+          <Link
+            href="/players"
+            className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-md font-semibold transition-colors border border-slate-700"
+          >
+            View Player Gallery
+          </Link>
+        </div>
       </header>
 
       {/* <div className="w-full max-w-4xl flex flex-col items-center">       
