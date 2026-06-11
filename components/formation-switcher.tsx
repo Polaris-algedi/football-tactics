@@ -1,6 +1,6 @@
 "use client";
 
-import { useTacticsStore } from "@/store/tactics";
+import { useTacticsStore } from "@/store/useTacticsStore";
 import { BIG_FIVE_FORMATIONS } from "@/lib/formations";
 import {
   Select,
