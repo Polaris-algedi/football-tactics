@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, PanInfo } from "framer-motion";
-import { useTacticsStore, PitchPlayer } from "@/store/tactics";
+import { useTacticsStore, PitchPlayer } from "@/store/useTacticsStore";
 import {
   Tooltip,
   TooltipContent,
@@ -31,6 +31,8 @@ export default function PlayerMarker({
   const setSelectedBenchPlayer = useTacticsStore(
     (state) => state.setSelectedBenchPlayer,
   );
+
+  const [imgError, setImgError] = useState(false);
 
   const MARKER_RADIUS = 20;
 
@@ -141,13 +143,23 @@ export default function PlayerMarker({
           </div> */}
           <div
             onClick={handleMarkerClick}
-            className={`flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-[#C1272D] shadow-xl transition-all
+            className={`flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-[#C1272D] shadow-xl transition-all overflow-hidden
     ${selectedBenchPlayerId ? "animate-pulse cursor-pointer ring-4 ring-[#006233]/50" : ""}
   `}
           >
-            <span className="text-sm font-bold text-white select-none">
-              {player.number}
-            </span>
+            {player.headshot_url && !imgError ? (
+              <img
+                src={player.headshot_url}
+                alt={player.name}
+                draggable={false}
+                onError={() => setImgError(true)}
+                className="bg-amber-50"
+              />
+            ) : (
+              <span className="text-sm font-bold text-white select-none">
+                {player.jersey_number}
+              </span>
+            )}
           </div>
         </motion.div>
       </TooltipTrigger>
