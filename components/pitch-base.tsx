@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { useTacticsStore } from "@/store/tactics";
+import { useTacticsStore } from "@/store/useTacticsStore";
 import PlayerMarker from "@/components/player-marker";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
