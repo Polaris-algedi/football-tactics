@@ -1,6 +1,6 @@
 "use client";
 
-import { useTacticsStore } from "@/store/tactics";
+import { useTacticsStore } from "@/store/useTacticsStore";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ArrowLeftRight } from "lucide-react";
 
@@ -45,7 +45,7 @@ export default function SquadSidebar() {
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white ${isSelected ? "bg-[#006233]" : "bg-slate-700"}`}
                   >
-                    {player.number}
+                    {player.jersey_number}
                   </div>
                   <div className="text-left">
                     <p className="text-sm font-bold text-white leading-tight">
