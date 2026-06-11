@@ -1,4 +1,4 @@
-import type { FormationPreset } from "@/store/tactics";
+import type { FormationPreset } from "@/store/useTacticsStore";
 
 export const BIG_FIVE_FORMATIONS: Record<string, FormationPreset> = {
   "4-3-3": {
